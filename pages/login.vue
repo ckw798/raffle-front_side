@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import logo_url from "~/assets/ckw.jpg"
+import logo_url from "~/assets/logo.png"
 import username_url from '~/assets/username.png'
 import password_url from '~/assets/password.png'
 import {login,LoginForm} from '~/api/user'
@@ -21,9 +21,9 @@ const rules = ref<Record<keyof LoginForm, any>>({
 
 
 <template>
-    <div class="login-ct">
+    <div class="login-ct" shadow>
         <div class="center-ct">
-            <el-image :src="logo_url" class="login-logo" />
+            <el-avatar :src="logo_url" class="login-logo" />
         </div>
         <ElCard shadow="always">
             <template #header>
@@ -47,7 +47,7 @@ const rules = ref<Record<keyof LoginForm, any>>({
                 </el-form>
             </div>
             <div class="center-ct">
-                <el-button color="#169bd5" @click="login(loginForm)" class="login-bt">
+                <el-button round color="#ffd150" @click="login(loginForm)" size="large" class="login-bt" >
                     登录
                 </el-button>
             </div>
@@ -64,7 +64,7 @@ const rules = ref<Record<keyof LoginForm, any>>({
 
 .login-img {
     width: 2rem;
-    height: 3rem;
+    height: 2rem;
 }
 
 .login-logo {
@@ -79,4 +79,5 @@ const rules = ref<Record<keyof LoginForm, any>>({
     justify-content: center;
     align-items: center;
 }
+
 </style>
