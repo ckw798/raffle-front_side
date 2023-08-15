@@ -2,20 +2,14 @@
 import { ref } from 'vue'
 import welcome_url from '~/assets/welcome.png'
 import raffle_url from '~/assets/raffle.png'
-
+import raffle_bg_url from '~/assets/raffle-bg.png'
 
 const x = ref(0)
 const myLucky = ref(null)
 const width = ref('21rem')
 const height = ref('21rem')
 const blocks = ref([
-  { padding: '0.7rem', background: 'rgb(68,63,215)' },
-  { padding: '1.5rem', background: 'rgb(90,32,202)' },
-  { padding: '0.35rem', background: 'rgb(254,248,79)' },
-  { padding: '0.25rem', background: 'rgb(251,136,50)' },
-  { padding: '1rem', background: 'rgb(120,29,225)' },
-  { padding: '0.7rem', background: 'rgb(118,111,254)', img: { src: welcome_url, width: "1rem", height: "1rem", top: '-10px' } },
-  { padding: '0.25rem', background: 'rgb(120,29,225)' }
+  { padding: '4.5rem' }
 ])
 const prizes = ref([
   { background: 'rgb(110,32,231)', fonts: [{ text: '岳志邦', fontSize: '0.7rem',fontColor: "#e9e0ff",top:"0.85rem"}] },
@@ -91,20 +85,27 @@ const d_style = ref({
       <el-main class="center-ct main">
         <div class="lucky-ct">
           <div class="center-ct">
+            <div class="raffle-bg-ct">
+              <img :src="raffle_bg_url">
+            </div>
+          </div>
+          <div class="center-ct">
             <ClientOnly>
               <LuckyWheel ref="myLucky" :width="width" :height="height" :prizes="prizes" :blocks="blocks"
                 :buttons="buttons" @start="startCallback" @end="endCallback" :default-config="d_config"
-                :default-style="d_style" />
+                :default-style="d_style" class="lucky" />
             </ClientOnly>
           </div>
         </div>
       </el-main>
       <el-footer class="footer">
         <div class="center-ct confidence" >
-          <div>您还剩余 {{ x }} 次抽奖机会</div>
+          <div class="text-xs text-white font-semibold">您还剩余 {{ x }} 次抽奖机会</div>
         </div>
-        <div class="center-ct">
-            <el-button size="large" color="#ffcc4a" >我的奖品</el-button>
+        <div class="center-ct rbt-ct">
+            <el-button color="#ffcc4a" round class="rbt">
+              <div class="mine text-xl font-semibold">我的奖品</div>
+            </el-button>
         </div>
       </el-footer>
     </el-container>
@@ -161,6 +162,27 @@ const d_style = ref({
 }
 
 .confidence{
-  padding-bottom: 2rem;
+  padding-bottom: 2.4rem;
+}
+.rbt-ct{
+  height: 0.1rem;
+  padding-top: 0rem;
+}
+
+.rbt{
+  width: 15rem;
+  height: 3rem;
+}
+
+.mine{
+  color: #3c0d9c;
+}
+
+.raffle-bg-ct{
+  position:absolute;
+  z-index: -10086rem;
+  width: 21rem;
+  height: 21rem;
+  padding-top: 0.3rem;
 }
 </style>

@@ -21,10 +21,11 @@ const rules = ref<Record<keyof LoginForm, any>>({
 
 
 <template>
-    <div class="login-ct" shadow>
+    <div class="login-ct shadow" >
         <div class="center-ct">
             <el-avatar :src="logo_url" class="login-logo" />
         </div>
+        <div class="card-ct">
         <ElCard shadow="always">
             <template #header>
                 <div class="center-ct">Login</div>
@@ -48,11 +49,12 @@ const rules = ref<Record<keyof LoginForm, any>>({
             </div>
             <div class="center-ct">
                 <el-button round color="#ffd150" @click="login(loginForm)" size="large" class="login-bt" >
-                    登录
+                    <div class="text-xl login-text font-semibold">登   陆</div>
                 </el-button>
             </div>
 
         </ElCard>
+    </div>
     </div>
 </template>
 
@@ -80,4 +82,20 @@ const rules = ref<Record<keyof LoginForm, any>>({
     align-items: center;
 }
 
+.card-ct{
+    padding-top: 0.1rem;
+}
+
+.login-ct{
+padding-top: 4rem;
+}
+
+.login-text{
+    color: #3c0d9c;;
+}
+
+.login-bt{
+    width: 7rem;
+    height: 2.5rem;
+}
 </style>

@@ -16,7 +16,8 @@ import bg_url from '~/assets/background.png'
 html{
     min-height: 100%;
     background-image:url('~/assets/background.png');
-    background-size: contain;
+    background-size: 100% 100%;
+    zoom: 100%;
 }
 
 .center-ct {
@@ -24,10 +25,4 @@ html{
   justify-content: center;
   align-items: center;
 }
-
-.footer{
-    padding-top: 0;
-    margin-top: 0;
-}
-
 </style>
