@@ -21,15 +21,11 @@ const rules = ref<Record<keyof LoginForm, any>>({
 
 
 <template>
-    <div class="login-ct shadow" >
+    <div class="login-ct" >
         <div class="center-ct">
             <el-avatar :src="logo_url" class="login-logo" />
         </div>
         <div class="card-ct">
-        <ElCard shadow="always">
-            <template #header>
-                <div class="center-ct">Login</div>
-            </template>
             <div class="center-ct">
                 <el-form :model="loginForm" :rules="rules">
 
@@ -47,22 +43,24 @@ const rules = ref<Record<keyof LoginForm, any>>({
 
                 </el-form>
             </div>
-            <div class="center-ct">
+            <div class="center-ct pt-5">
                 <el-button round color="#ffd150" @click="login(loginForm)" size="large" class="login-bt" >
                     <div class="text-xl login-text font-semibold">登   陆</div>
                 </el-button>
             </div>
-
-        </ElCard>
     </div>
     </div>
 </template>
 
 <style scoped>
 .el_input {
-    padding-left: 1rem;
-    width: 15rem;
+    padding-left: 2rem;
+    width: 16.5rem;
+    border:0;
+    outline: 0;
 }
+
+
 
 .login-img {
     width: 2rem;
@@ -75,19 +73,15 @@ const rules = ref<Record<keyof LoginForm, any>>({
     margin-bottom: 2rem;
 }
 
-
 .center-ct {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.card-ct{
-    padding-top: 0.1rem;
-}
 
 .login-ct{
-padding-top: 4rem;
+padding-top: 7rem;
 }
 
 .login-text{
@@ -98,4 +92,19 @@ padding-top: 4rem;
     width: 7rem;
     height: 2.5rem;
 }
+
 </style>
+
+<style>
+.el-input__wrapper{
+    border: none;
+    outline: none;
+    background-color: #9669ed;
+    color: #9669ed;
+    border-radius:0.8rem;
+    box-shadow: none;
+}
+
+
+</style>
+

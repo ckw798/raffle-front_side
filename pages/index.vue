@@ -1,8 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-import welcome_url from '~/assets/welcome.png'
-import raffle_url from '~/assets/raffle.png'
-import raffle_bg_url from '~/assets/raffle-bg.png'
+import { ref } from 'vue';
+import welcome_url from '~/assets/welcome.png';
+import raffle_url from '~/assets/raffle.png';
+import raffle_bg_url from '~/assets/raffle-bg.png';
+import { InfoFilled } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
 
 const x = ref(0)
 const myLucky = ref(null)
@@ -66,6 +68,18 @@ const d_style = ref({
   fontColor: "#000"
 });
 
+
+const msg = () => {
+  ElMessageBox.alert('我是天帝', '抽奖规则', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: 'OK',
+    callback: () => {
+    },
+  })
+}
+
+
 </script>
 
 
@@ -73,6 +87,9 @@ const d_style = ref({
   <div>
     <el-container>
       <el-header class="header">
+        <div class="info-ct">
+          <button class="info-bt" @click="msg"><el-icon><InfoFilled /></el-icon></button>
+          </div>
         <div>
           <div class="center-ct " id="h">
             <el-image :src='welcome_url' class="welcome-ct" />
@@ -80,6 +97,7 @@ const d_style = ref({
           <div class="center-ct" id="g">
             <el-image :src='raffle_url' class="raffle-ct"  />
           </div>
+         
         </div>
       </el-header>
       <el-main class="center-ct main">
@@ -184,5 +202,17 @@ const d_style = ref({
   width: 21rem;
   height: 21rem;
   padding-top: 0.3rem;
+}
+
+
+.info-ct{
+  position: absolute;
+  right: 1rem;
+  top:3rem;
+  z-index: 10086rem;
+}
+
+.info-bt{
+  z-index: 10086rem;
 }
 </style>

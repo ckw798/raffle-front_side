@@ -17,6 +17,7 @@
     "nuxt": "^3.5.2"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
     "@lucky-canvas/vue": "^0.1.11"
   }
 }
