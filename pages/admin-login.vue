@@ -32,18 +32,18 @@ const rules = ref<Record<keyof LoginForm, any>>({
                     <el-form-item prop="username">
                         <el-image :src='username_url' class="login-img" />
                         <el-input type="text" v-model="loginForm.username" clearable class="el_input"
-                            placeholder="请输入账号"></el-input>
+                            ></el-input>
                     </el-form-item>
 
                     <el-form-item prop="password">
                         <el-image :src="password_url" class="login-img" />
-                        <el-input type="password" placeholder="请输入密码" class="el_input" clearable show-password required
+                        <el-input type="password"  class="el_input" clearable show-password required
                             v-model="loginForm.password"></el-input>
                     </el-form-item>
 
                 </el-form>
             </div>
-            <div class="center-ct pt-5">
+            <div class="center-ct pt-5">s
                 <el-button round color="#ffd150" @click="login(loginForm)" size="large" class="login-bt" >
                     <div class="text-xl login-text font-semibold">登   陆</div>
                 </el-button>
@@ -85,7 +85,7 @@ padding-top: 7rem;
 }
 
 .login-text{
-    color: #3c0d9c;;
+    color: #3c0d9c;
 }
 
 .login-bt{
@@ -99,8 +99,8 @@ padding-top: 7rem;
 .el-input__wrapper{
     border: none;
     outline: none;
-    background-color: #9669ed;
-    color: #9669ed;
+    background-color: #8e54ff;
+    color: #8e54ff;
     border-radius:0.8rem;
     box-shadow: none;
 }

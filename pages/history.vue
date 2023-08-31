@@ -1,5 +1,7 @@
 <script setup>
 const raffle_s = ref("领 取")
+
+const router = useRouter();
 </script>
 
 <template>
@@ -33,9 +35,9 @@ const raffle_s = ref("领 取")
       </el-main>
 
         <div class="bt-ct center-ct">
-          <span><el-button class="bt" color="rgb(249,216,109)"><div class="bt-text text-base font-medium">正在抽奖</div></el-button></span>
-          <span class="px-1.5"><el-button class="bt" color="rgb(249,216,109)"><div class="bt-text text-base font-medium">抽奖中心</div></el-button></span>
-          <span><el-button class="bt" color="rgb(249,216,109)"><div class="bt-text text-base font-medium">个人中心</div></el-button></span>
+          <span><el-button class="bt" color="rgb(249,216,109)" dark="true" @click="router.push('/')"><div class="bt-text text-base font-medium">正在抽奖</div></el-button></span>
+          <span class="px-1.5"><el-button class="bt" color="rgb(249,216,109)" dark="true"><div class="bt-text text-base font-medium">抽奖中心</div></el-button></span>
+          <span><el-button class="bt" color="rgb(249,216,109)" dark="true" @click="router.push('/user-center')"><div class="bt-text text-base font-medium">个人中心</div></el-button></span>
         </div>
     </el-container>
 

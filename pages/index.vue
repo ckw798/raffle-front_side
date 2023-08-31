@@ -6,6 +6,8 @@ import raffle_bg_url from '~/assets/raffle-bg.png';
 import { InfoFilled } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
+
+const router = useRouter()
 const x = ref(0)
 const myLucky = ref(null)
 const width = ref('21rem')
@@ -39,6 +41,32 @@ const buttons = ref([
 
 ])
 
+
+const res = (result) =>{
+  ElMessage({
+    message:'恭喜你获得了'+result,
+    type:'success',
+    center:'true',
+    duration:'3000',
+    offset:'28'
+
+})
+}
+
+
+
+const msg = () => {
+  ElMessageBox.alert('我是天帝', '抽奖规则', {
+    // if you want to disable its autofocus
+    // autofocus: false,
+    confirmButtonText: 'OK',
+    callback: () => {
+    },
+  })
+}
+
+
+
 const startCallback = () => {
   myLucky.value.play()
   setTimeout(() => {
@@ -47,8 +75,8 @@ const startCallback = () => {
   }, 3000)
 }
 
-const endCallback = () => {
-  alert("hhh");
+const endCallback = (result) => {
+  res(result);
 };
 
 
@@ -69,15 +97,9 @@ const d_style = ref({
 });
 
 
-const msg = () => {
-  ElMessageBox.alert('我是天帝', '抽奖规则', {
-    // if you want to disable its autofocus
-    // autofocus: false,
-    confirmButtonText: 'OK',
-    callback: () => {
-    },
-  })
-}
+
+
+
 
 
 </script>
@@ -87,9 +109,16 @@ const msg = () => {
   <div>
     <el-container>
       <el-header class="header">
-        <div class="info-ct">
-          <button class="info-bt" @click="msg"><el-icon><InfoFilled /></el-icon></button>
+        <div class="info-ct z-10">
+          <button class="info-bt z-11" @click="msg"><el-icon><InfoFilled /></el-icon></button>
           </div>
+
+          <div class="bt-ct-1 z-10">
+            <button @click="router.push('/user-center')" class="z-11">
+              <div class="text-white text-xs text font-extrabold">个人中心</div>
+            </button>
+          </div>
+
         <div>
           <div class="center-ct " id="h">
             <el-image :src='welcome_url' class="welcome-ct" />
@@ -110,7 +139,7 @@ const msg = () => {
           <div class="center-ct">
             <ClientOnly>
               <LuckyWheel ref="myLucky" :width="width" :height="height" :prizes="prizes" :blocks="blocks"
-                :buttons="buttons" @start="startCallback" @end="endCallback" :default-config="d_config"
+                :buttons="buttons" @start="startCallback()" @end="endCallback(233)" :default-config="d_config"
                 :default-style="d_style" class="lucky" />
             </ClientOnly>
           </div>
@@ -121,7 +150,7 @@ const msg = () => {
           <div class="text-xs text-white font-semibold">您还剩余 {{ x }} 次抽奖机会</div>
         </div>
         <div class="center-ct rbt-ct">
-            <el-button color="#ffcc4a" round class="rbt">
+            <el-button color="#ffcc4a" round class="rbt" @click="router.push('/history')">
               <div class="mine text-xl font-semibold">我的奖品</div>
             </el-button>
         </div>
@@ -185,11 +214,13 @@ const msg = () => {
 .rbt-ct{
   height: 0.1rem;
   padding-top: 0rem;
+  z-index: 10086;
 }
 
 .rbt{
   width: 15rem;
   height: 3rem;
+  z-index: 10087;
 }
 
 .mine{
@@ -207,12 +238,18 @@ const msg = () => {
 
 .info-ct{
   position: absolute;
-  right: 1rem;
-  top:3rem;
+  right: 2.5rem;
+  top:12rem;
   z-index: 10086rem;
 }
 
 .info-bt{
   z-index: 10086rem;
+}
+
+.bt-ct-1{
+  position: absolute;
+  right: 1.5rem;
+  top:3.5rem;
 }
 </style>
