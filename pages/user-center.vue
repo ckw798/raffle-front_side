@@ -7,11 +7,7 @@ const router = useRouter();
 
 const log_out_status = ref(false);
 
-const form = ref({
-  name: "姓名",
-  phone: "手机号",
-  address: "地址",
-});
+const form = ref(await get_user());
 
 const edit_status = ref(false);
 
@@ -20,20 +16,7 @@ async function initForm() {
     fullscreen: true,
     text: "正在初始化",
   });
-
-  const init = async () => {
-    const res = await get_user();
-
-    form.value.name = res.name;
-    if (res.address) {
-      form.value.address = res.address;
-    } else form.value.address = "地址";
-    if (res.phone_number) {
-      form.value.phone = res.phone_number;
-    } else form.value.phone = "手机号";
-    return res;
-  };
-  await init()
+  await get_user()
     .then((data) => {
       loading.close();
       return data;
@@ -56,8 +39,8 @@ async function handleClose() {
 
 function reset() {
   form.value.address = "";
-  form.value.name = "";
-  form.value.phone = "";
+  form.value.nickname = "";
+  form.value.phone_number = "";
 }
 
 async function handleChange() {
@@ -65,7 +48,11 @@ async function handleChange() {
     fullscreen: true,
     text: "正在更新信息",
   });
-  await put_user(form.value.phone, form.value.address)
+  await put_user(
+    form.value.nickname,
+    form.value.phone_number,
+    form.value.address
+  )
     .then((data) => {
       ElMessageBox.alert("更新成功", "更新信息提示", {
         confirmButtonText: "好的",
@@ -113,10 +100,10 @@ initForm();
           </div>
           <div class="total">
             <span class="name ad-text text-sm font-semibold">{{
-              form.name
+              form.nickname
             }}</span>
             <span class="phone-num mx-4 ad-text text-sm font-semibold">{{
-              form.phone
+              form.phone_number
             }}</span>
             <span class="address ad-text text-sm font-semibold">{{
               form.address
@@ -144,9 +131,13 @@ initForm();
         ></span
       >
       <span class="px-1.5"
-        ><el-button class="bt" color="rgb(249,216,109)" dark
+        ><el-button
+          class="bt"
+          color="rgb(249,216,109)"
+          dark
+          @click="router.push('/history')"
           ><div class="bt-text text-base font-medium" style="color: #5d22d0">
-            抽奖中心
+            中奖历史
           </div></el-button
         ></span
       >
@@ -184,7 +175,10 @@ initForm();
               >领取人姓名</span
             >
             <span>
-              <el-input v-model="form.name" autocomplete="off" class="el-input"
+              <el-input
+                v-model="form.nickname"
+                autocomplete="off"
+                class="el-input"
             /></span>
           </el-form-item>
           <el-form-item>
@@ -193,7 +187,7 @@ initForm();
             >
             <span
               ><el-input
-                v-model="form.phone"
+                v-model="form.phone_number"
                 autocomplete="off"
                 class="el-input"
             /></span>
@@ -215,7 +209,7 @@ initForm();
             <el-button
               @click="[handleChange()]"
               class="el-bt"
-              :disabled="!(form.address && form.name && form.phone)"
+              :disabled="!(form.address && form.nickname && form.phone_number)"
             >
               <div class="font-semibold" style="color: rgb(67, 32, 124)">
                 保存并退出

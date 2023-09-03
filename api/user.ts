@@ -4,7 +4,7 @@
 
 
 export interface UserInfo {
-    name: string;
+    nickname: string;
     phone_number: string;
     address: string;
 }
@@ -56,13 +56,14 @@ export async function get_user() {
         )
 }
 
-export async function put_user(phone_number: string, address: string) {
+export async function put_user(nickname: string, phone_number: string, address: string) {
     return await $fetch('/frontpage/user',
         {
             method: 'POST',
-            params: {
+            body: {
+                nickname: nickname,
                 phone_number: phone_number,
-                address: address
+                address: address,
             }
         })
         .then(

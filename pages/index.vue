@@ -5,10 +5,12 @@ import raffle_url from "~/assets/raffle.png";
 import raffle_bg_url from "~/assets/raffle-bg.png";
 import { InfoFilled } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { get_raffle, startRaffle } from "~/api/raffle";
 
+const raffle_res = ref(false);
+const raffleInfo = await get_raffle(1);
 const userStore = useUserStore();
 const router = useRouter();
-const x = ref(0);
 const myLucky = ref(null);
 const width = ref("21rem");
 const height = ref("21rem");
@@ -36,95 +38,36 @@ const prizes = ref([
       },
     ],
   },
-  {
-    background: "rgb(110,32,231)",
-    fonts: [
-      {
-        text: "岳志邦",
-        fontSize: "0.7rem",
-        fontColor: "#e9e0ff",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(233,224,255)",
-    fonts: [
-      {
-        text: "邦邦",
-        fontSize: "0.7rem",
-        fontColor: "#7021e6",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(110,32,231)",
-    fonts: [
-      {
-        text: "岳志邦",
-        fontSize: "0.7rem",
-        fontColor: "#e9e0ff",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(233,224,255)",
-    fonts: [
-      {
-        text: "邦邦",
-        fontSize: "0.7rem",
-        fontColor: "#7021e6",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(110,32,231)",
-    fonts: [
-      {
-        text: "岳志邦",
-        fontSize: "0.7rem",
-        fontColor: "#e9e0ff",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(233,224,255)",
-    fonts: [
-      {
-        text: "邦邦",
-        fontSize: "0.7rem",
-        fontColor: "#7021e6",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(110,32,231)",
-    fonts: [
-      {
-        text: "岳志邦",
-        fontSize: "0.7rem",
-        fontColor: "#e9e0ff",
-        top: "0.85rem",
-      },
-    ],
-  },
-  {
-    background: "rgb(233,224,255)",
-    fonts: [
-      {
-        text: "邦邦",
-        fontSize: "0.7rem",
-        fontColor: "#7021e6",
-        top: "0.85rem",
-      },
-    ],
-  },
 ]);
+prizes.value = raffleInfo.prize.map((p, i) => {
+  let res;
+  if (i % 2 === 0) {
+    res = {
+      background: "rgb(110,32,231)",
+      fonts: [
+        {
+          text: p.name,
+          fontSize: "0.7rem",
+          fontColor: "#e9e0ff",
+          top: "0.85rem",
+        },
+      ],
+    };
+  } else {
+    res = {
+      background: "rgb(233,224,255)",
+      fonts: [
+        {
+          text: p.name,
+          fontSize: "0.7rem",
+          fontColor: "#7021e6",
+          top: "0.85rem",
+        },
+      ],
+    };
+  }
+  return res;
+});
 const buttons = ref([
   {
     radius: "27.5%",
@@ -141,16 +84,10 @@ const buttons = ref([
   },
 ]);
 
-const res = (result) => {
-  ElMessage({
-    message: "恭喜你获得了" + result,
-    type: "success",
-    center: "true",
-    duration: "3000",
-    offset: "28",
-  });
-};
-
+const result = ref({
+  name: "谢谢惠顾",
+  level: "安慰奖",
+});
 const msg = () => {
   ElMessageBox.alert("我是天帝", "抽奖规则", {
     // if you want to disable its autofocus
@@ -168,8 +105,11 @@ const startCallback = () => {
   }, 3000);
 };
 
-const endCallback = (result) => {
-  res(result);
+const endCallback = async (raffle_id) => {
+  const pirze = await startRaffle(raffle_id);
+  raffle_res.value = true;
+  result.value.name = pirze.name;
+  result.value.level = pirze.level;
 };
 
 //
@@ -220,7 +160,7 @@ const d_style = ref({
               <img :src="raffle_bg_url" />
             </div>
           </div>
-          <div class="center-ct">
+          <div class="center-ct wheel-ct">
             <ClientOnly>
               <LuckyWheel
                 ref="myLucky"
@@ -230,11 +170,23 @@ const d_style = ref({
                 :blocks="blocks"
                 :buttons="buttons"
                 @start="startCallback()"
-                @end="endCallback(userStore.user.name)"
+                @end="endCallback(1)"
                 :default-config="d_config"
                 :default-style="d_style"
                 class="lucky"
               />
+
+              <el-dialog v-model="raffle_res" width="80%">
+                <template #header> 抽奖结果 </template>
+
+                <div>恭喜你抽到了</div>
+                <div>奖品名称：{{ result.name }}</div>
+                <div>奖项：{{ result.level }}</div>
+
+                <template #footer>
+                  <ElButton @click="raffle_res = false">好的</ElButton>
+                </template>
+              </el-dialog>
             </ClientOnly>
           </div>
         </div>
@@ -242,7 +194,7 @@ const d_style = ref({
       <el-footer class="footer">
         <div class="center-ct confidence">
           <div class="text-xs text-white font-semibold">
-            您还剩余 {{ x }} 次抽奖机会
+            您还剩余 {{ raffleInfo.id }} 次抽奖机会
           </div>
         </div>
         <div class="center-ct rbt-ct">
@@ -284,10 +236,6 @@ const d_style = ref({
   width: 7.5rem;
   height: 2rem;
   padding-left: 0.5rem;
-}
-
-.footer {
-  padding-top: 0rem;
 }
 
 .welcome-ct {
@@ -349,5 +297,13 @@ const d_style = ref({
   position: absolute;
   right: 1.5rem;
   top: 3.5rem;
+}
+
+.wheel-ct {
+  width: 21rem;
+  height: 21rem;
+}
+.lucky {
+  position: absolute;
 }
 </style>

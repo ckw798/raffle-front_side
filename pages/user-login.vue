@@ -3,6 +3,7 @@ import logo_url from "~/assets/logo.png";
 import username_url from "~/assets/username.png";
 import password_url from "~/assets/password.png";
 import { LoginForm } from "~/api/user";
+import { Loading } from "@element-plus/icons-vue/dist/types";
 const loginForm = ref<LoginForm>({
   username: "",
   password: "",
@@ -28,12 +29,34 @@ async function handleLogin() {
   }
 
   try {
-    await userStore.login(loginForm.value);
-    alert("登录成功");
-    router.push("/user-center");
+    const loading = ElLoading.service({
+      fullscreen: true,
+      text: "正在登录",
+    });
+    await userStore
+      .login(loginForm.value)
+      .then((data) => {
+        ElMessageBox.alert("登录成功", "登录提示", {
+          confirmButtonText: "好的",
+          callback: () => {},
+        });
+
+        return data;
+      })
+      .then((data) => {
+        router.push("/user-center");
+        return data;
+      })
+      .finally(() => {
+        loading.close();
+      });
   } catch (err) {
     console.log(err);
-    alert("账号或密码错误");
+    ElMessageBox.alert("登录失败，请检查网络条件或账号密码后重试", "登录提示", {
+      confirmButtonText: "好的",
+      callback: () => {},
+    });
+    return err;
   }
 }
 </script>
