@@ -7,9 +7,15 @@ export default defineNuxtPlugin(_nuxtApp => {
         baseURL: useRuntimeConfig().public.apiBase,
         onRequest({ options }) {
             const userStore = useUserStore();
+            const adminStore = useAdminStore();
             if (userStore.user?.accessToken) {
                 options.headers = {
                     Authorization: `Bearer ${userStore.user.accessToken}`
+                };
+            }
+            if (adminStore.admin?.accessToken) {
+                options.headers = {
+                    Authorization: `Bearer ${adminStore.admin?.accessToken}`
                 };
             }
         }

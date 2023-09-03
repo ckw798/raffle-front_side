@@ -50,12 +50,12 @@ function msg() {
                 <div
                   class="r-title grid place-items-center font-bold text-xl pb-5"
                 >
-                  {{ record.prize.id }}
+                  {{ record.prize.name }}
                 </div>
                 <div
                   class="r-main grid place-items-center font-medium text-base"
                 >
-                  {{ record.prize.name }}
+                  {{ record.prize.level }}
                 </div>
                 <div class="button-ct grid place-items-center pt-5">
                   <el-button color="#5d22d0" round @click="">
@@ -87,7 +87,7 @@ function msg() {
         <span class="px-1.5"
           ><el-button class="bt" color="rgb(249,216,109)" dark
             ><div class="bt-text text-base font-medium">
-              抽奖中心
+              中奖历史
             </div></el-button
           ></span
         >

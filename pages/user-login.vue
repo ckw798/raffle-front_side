@@ -10,7 +10,8 @@ const loginForm = ref<LoginForm>({
 
 const router = useRouter();
 const userStore = useUserStore();
-
+const adminStore = useAdminStore();
+adminStore.logout();
 const rules = ref<Record<keyof LoginForm, any>>({
   username: [
     { required: true, message: "用户名不能为空！", trigger: "blur" },

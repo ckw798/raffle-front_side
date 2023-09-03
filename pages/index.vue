@@ -6,9 +6,10 @@ import raffle_bg_url from "~/assets/raffle-bg.png";
 import { InfoFilled } from "@element-plus/icons-vue";
 import { ElMessageBox } from "element-plus";
 import { get_raffle, startRaffle } from "~/api/raffle";
+import { da } from "element-plus/es/locale";
 
 const raffle_res = ref(false);
-const raffleInfo = await get_raffle(1);
+const raffleInfo = ref(await get_raffle(1));
 const userStore = useUserStore();
 const router = useRouter();
 const myLucky = ref(null);
@@ -45,13 +46,13 @@ async function initPrizes() {
     fullscreen: true,
     text: "正在获取奖品",
   });
-  await getPrizes().then(() => {
+  await getPrizes().then((data) => {
     loading.close();
   });
 }
 
 async function getPrizes() {
-  prizes.value = raffleInfo.prize.map((p, i) => {
+  prizes.value = raffleInfo.value.prize.map((p, i) => {
     let res;
     if (i % 2 === 0) {
       res = {
@@ -103,30 +104,102 @@ const buttons = ref([
 const result = ref({
   name: "谢谢惠顾",
   level: "安慰奖",
+  times: raffleInfo.value.times,
 });
 const msg = () => {
-  ElMessageBox.alert("我是天帝", "抽奖规则", {
-    // if you want to disable its autofocus
-    // autofocus: false,
-    confirmButtonText: "OK",
-    callback: () => {},
-  });
+  ElMessageBox.alert(
+    "<div>" +
+      raffleInfo.value.title +
+      "</div>" +
+      "<div>" +
+      raffleInfo.value.content +
+      "</div>" +
+      "<div>抽奖开始日期：" +
+      raffleInfo.value.datetime +
+      "</div>" +
+      "<div>抽奖截止日期：" +
+      raffleInfo.value.deadline +
+      "</div>",
+    "抽奖规则",
+    {
+      // if you want to disable its autofocus
+      // autofocus: false,
+      confirmButtonText: "OK",
+      dangerouslyUseHTMLString: true,
+      callback: () => {},
+    }
+  );
 };
 
-const startCallback = () => {
+const startCallback = async (raffle_id) => {
+  if (!result.value.times) {
+    ElMessageBox.alert("抽奖次数不足，请留意后续活动", "抽奖提示", {
+      // if you want to disable its autofocus
+      // autofocus: false,
+      confirmButtonText: "OK",
+      callback: async () => {
+        await get_raffle(1)
+          .then((data) => {
+            result.value.times = data.times;
+            return data;
+          })
+          .catch((err) => {
+            ElMessageBox.alert("抽奖次数刷新失败", "抽奖提示", {
+              // if you want to disable its autofocus
+              // autofocus: false,
+              confirmButtonText: "OK",
+              callback: () => {},
+            });
+          });
+      },
+    });
+    return 0;
+  }
   myLucky.value.play();
-  setTimeout(() => {
-    const index = 0;
-    myLucky.value.stop(index);
-  }, 3000);
+  await startRaffle(raffle_id)
+    .then((data) => {
+      result.value.name = data.name;
+      result.value.level = data.level;
+      result.value.index = data.index;
+      return data;
+    })
+    .catch((err) => {
+      (result.value.name = "谢谢惠顾"), (result.value.level = "安慰奖");
+      setTimeout(() => {
+        myLucky.value.stop(0.5);
+      }, 3000);
+      return err;
+    })
+    .finally(() => {
+      setTimeout(() => {
+        myLucky.value.stop(result.value.index);
+      }, 3000);
+    });
 };
 
-const endCallback = async (raffle_id) => {
-  const pirze = await startRaffle(raffle_id);
+const endCallback = () => {
   raffle_res.value = true;
-  result.value.name = pirze.name;
-  result.value.level = pirze.level;
 };
+
+async function handleClose() {
+  await get_raffle(1)
+    .then((data) => {
+      result.value.times = data.times;
+      return data;
+    })
+    .catch((err) => {
+      ElMessageBox.alert("抽奖次数刷新失败", "抽奖提示", {
+        // if you want to disable its autofocus
+        // autofocus: false,
+        confirmButtonText: "OK",
+        callback: () => {},
+      });
+      return err;
+    })
+    .finally(() => {
+      raffle_res.value = false;
+    });
+}
 
 //
 
@@ -185,14 +258,14 @@ const d_style = ref({
                 :prizes="prizes"
                 :blocks="blocks"
                 :buttons="buttons"
-                @start="startCallback()"
-                @end="endCallback(1)"
+                @start="startCallback(1)"
+                @end="endCallback()"
                 :default-config="d_config"
                 :default-style="d_style"
                 class="lucky"
               />
 
-              <el-dialog v-model="raffle_res" width="80%">
+              <el-dialog v-model="raffle_res" width="80%" :show-close="false">
                 <template #header> 抽奖结果 </template>
 
                 <div>恭喜你抽到了</div>
@@ -200,7 +273,7 @@ const d_style = ref({
                 <div>奖项：{{ result.level }}</div>
 
                 <template #footer>
-                  <ElButton @click="raffle_res = false">好的</ElButton>
+                  <ElButton @click="handleClose()">好的</ElButton>
                 </template>
               </el-dialog>
             </ClientOnly>
@@ -210,7 +283,7 @@ const d_style = ref({
       <el-footer class="footer">
         <div class="center-ct confidence">
           <div class="text-xs text-white font-semibold">
-            您还剩余 {{ raffleInfo.id }} 次抽奖机会
+            您还剩余 {{ result.times }} 次抽奖机会
           </div>
         </div>
         <div class="center-ct rbt-ct">

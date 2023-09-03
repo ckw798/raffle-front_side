@@ -2,6 +2,9 @@
 import logo_url from "~/assets/logo.png";
 import { get_user, put_user } from "~/api/user";
 
+const adminStore = useAdminStore();
+adminStore.logout();
+
 const userStore = useUserStore();
 const router = useRouter();
 

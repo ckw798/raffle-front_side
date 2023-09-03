@@ -1,8 +1,39 @@
 <script setup lang="ts">
 import avatar_url from "~/assets/ckw.jpg";
-import { Plus } from '@element-plus/icons-vue';
+import { Plus } from "@element-plus/icons-vue";
+import { handleTimes } from "~/api/raffle";
+
+const userStore = useUserStore();
+userStore.logout();
+
+async function handle_times(
+  raffle_id: string,
+  student_number: string,
+  remaining_times: number
+) {
+  await handleTimes(raffle_id, student_number, remaining_times)
+    .then((data) => {
+      ElMessageBox.alert("修改成功", "修改信息提示", {
+        confirmButtonText: "好的",
+        callback: () => {},
+      });
+      return data;
+    })
+    .catch((err) => {
+      ElMessageBox.alert("更新成失败", "更新信息提示", {
+        confirmButtonText: "好的",
+        callback: () => {},
+      });
+    })
+    .finally(() => {
+      form.value = { raffle_id: "", student_number: "", remaining_times: 0 };
+    });
+}
+const form = ref({ raffle_id: "", student_number: "", remaining_times: 0 });
 const router = useRouter();
+const adminStore = useAdminStore();
 const log_out_status = ref(false);
+const times_status = ref(false);
 </script>
 
 <template>
@@ -19,13 +50,61 @@ const log_out_status = ref(false);
           <el-avatar :src="avatar_url" class="avatar" />
         </div>
 
-        <div class="collapse-ct mt-6">
+        <div class="times-ct grid place-items-center mt-16 mb-20">
+          <el-button @click="times_status = true">
+            点击修改用户抽奖次数
+          </el-button>
+          <el-dialog v-model="times_status" width="80%">
+            <template #header>修改用户抽奖次数 </template>
+            <div>
+              <el-form v-model="form">
+                <el-form-item>
+                  <span class="mr-8">抽奖id</span>
+                  <span><el-input v-model="form.raffle_id"></el-input></span>
+                </el-form-item>
+
+                <el-form-item>
+                  <span class="mr-11">学号</span>
+                  <span
+                    ><el-input v-model="form.student_number"></el-input
+                  ></span>
+                </el-form-item>
+
+                <el-form-item>
+                  <span class="mr-4">抽奖次数</span>
+                  <span
+                    ><el-input v-model="form.remaining_times"></el-input
+                  ></span>
+                </el-form-item>
+              </el-form>
+            </div>
+            <template #footer>
+              <el-button
+                @click="
+                  [
+                    (times_status = false),
+                    handle_times(
+                      form.raffle_id,
+                      form.student_number,
+                      form.remaining_times
+                    ),
+                  ]
+                "
+                >确定</el-button
+              >
+            </template>
+          </el-dialog>
+        </div>
+
+        <div class="collapse-ct mt-6" v-if="0">
           <button @click="router.push('/raffle-add')">
             <div
-              class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2">
+              class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2"
+            >
               <div>新增一个抽奖</div>
-              <div> <el-icon><Plus /></el-icon></div>
-             
+              <div>
+                <el-icon><Plus /></el-icon>
+              </div>
             </div>
           </button>
 
@@ -115,7 +194,16 @@ const log_out_status = ref(false);
                 否
               </div>
             </el-button>
-            <el-button @click="log_out_status = false" class="el-bt">
+            <el-button
+              @click="
+                [
+                  adminStore.logout,
+                  (log_out_status = false),
+                  router.push('/admin-login'),
+                ]
+              "
+              class="el-bt"
+            >
               <div class="font-semibold" style="color: rgb(67, 32, 124)">
                 是
               </div>
