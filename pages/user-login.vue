@@ -3,7 +3,6 @@ import logo_url from "~/assets/logo.png";
 import username_url from "~/assets/username.png";
 import password_url from "~/assets/password.png";
 import { LoginForm } from "~/api/user";
-import { Loading } from "@element-plus/icons-vue/dist/types";
 const loginForm = ref<LoginForm>({
   username: "",
   password: "",

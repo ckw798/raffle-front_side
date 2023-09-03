@@ -4,7 +4,7 @@ import welcome_url from "~/assets/welcome.png";
 import raffle_url from "~/assets/raffle.png";
 import raffle_bg_url from "~/assets/raffle-bg.png";
 import { InfoFilled } from "@element-plus/icons-vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessageBox } from "element-plus";
 import { get_raffle, startRaffle } from "~/api/raffle";
 
 const raffle_res = ref(false);
@@ -39,35 +39,51 @@ const prizes = ref([
     ],
   },
 ]);
-prizes.value = raffleInfo.prize.map((p, i) => {
-  let res;
-  if (i % 2 === 0) {
-    res = {
-      background: "rgb(110,32,231)",
-      fonts: [
-        {
-          text: p.name,
-          fontSize: "0.7rem",
-          fontColor: "#e9e0ff",
-          top: "0.85rem",
-        },
-      ],
-    };
-  } else {
-    res = {
-      background: "rgb(233,224,255)",
-      fonts: [
-        {
-          text: p.name,
-          fontSize: "0.7rem",
-          fontColor: "#7021e6",
-          top: "0.85rem",
-        },
-      ],
-    };
-  }
-  return res;
-});
+
+async function initPrizes() {
+  const loading = ElLoading.service({
+    fullscreen: true,
+    text: "正在获取奖品",
+  });
+  await getPrizes().then(() => {
+    loading.close();
+  });
+}
+
+async function getPrizes() {
+  prizes.value = raffleInfo.prize.map((p, i) => {
+    let res;
+    if (i % 2 === 0) {
+      res = {
+        background: "rgb(110,32,231)",
+        fonts: [
+          {
+            text: p.name,
+            fontSize: "0.7rem",
+            fontColor: "#e9e0ff",
+            top: "0.85rem",
+          },
+        ],
+      };
+    } else {
+      res = {
+        background: "rgb(233,224,255)",
+        fonts: [
+          {
+            text: p.name,
+            fontSize: "0.7rem",
+            fontColor: "#7021e6",
+            top: "0.85rem",
+          },
+        ],
+      };
+    }
+    return res;
+  });
+}
+
+initPrizes();
+
 const buttons = ref([
   {
     radius: "27.5%",
