@@ -396,3 +396,9 @@ const d_style = ref({
   position: absolute;
 }
 </style>
+
+<style>
+.el-message-box {
+  background-color: rgb(245, 212, 107);
+}
+</style>
