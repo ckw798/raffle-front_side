@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import avatar_url from "~/assets/ckw.jpg";
+import { getRafflesByState, Raffles } from "~/api/raffle";
 import { Plus } from "@element-plus/icons-vue";
 import { handleTimes } from "~/api/raffle";
 
@@ -34,6 +35,23 @@ const router = useRouter();
 const adminStore = useAdminStore();
 const log_out_status = ref(false);
 const times_status = ref(false);
+const raffles = ref<Raffles[]>([]);
+
+async function get_raffles_by_state(state: number) {
+  await getRafflesByState(state)
+    .then((data) => {
+      raffles.value = data;
+      return data;
+    })
+    .catch((err) => {
+      ElMessageBox.alert("获取抽奖失败", "获取信息提示", {
+        confirmButtonText: "好的",
+        showClose: false,
+        callback: () => {},
+      });
+      return err;
+    });
+}
 </script>
 
 <template>
@@ -50,7 +68,7 @@ const times_status = ref(false);
           <el-avatar :src="avatar_url" class="avatar" />
         </div>
 
-        <div class="times-ct grid place-items-center mt-16 mb-20">
+        <div class="times-ct grid place-items-center mt-16 mb-20" v-if="0">
           <el-button @click="times_status = true">
             点击修改用户抽奖次数
           </el-button>
@@ -96,7 +114,7 @@ const times_status = ref(false);
           </el-dialog>
         </div>
 
-        <div class="collapse-ct mt-6" v-if="0">
+        <div class="collapse-ct mt-6">
           <button @click="router.push('/raffle-add')">
             <div
               class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2"
@@ -111,23 +129,17 @@ const times_status = ref(false);
           <el-collapse accordion>
             <el-collapse-item>
               <template #title>
-                <div class="text-base ml-4 w-full">正在进行的抽奖</div>
+                <button @click="get_raffles_by_state(0)">
+                  <div class="text-base ml-4 w-full">正在进行的抽奖</div>
+                </button>
               </template>
 
-              <div
-                class="raffles-ing-ct grid place-items-center my-2 border-violet-950 border-y-2"
-              >
-                <button>
-                  <div class="text-base">迎新抽奖 2023.1-2023.6</div>
-                </button>
-              </div>
-
-              <div
-                class="raffles-ing-ct grid place-items-center border-violet-950 border-y-2"
-              >
-                <button>
-                  <div class="text-base">原神抽奖</div>
-                </button>
+              <div class="raffles-ct" v-for="raffle in raffles">
+                <div class="raffles-ing-ct grid place-items-center my-2">
+                  <button>
+                    <div class="text-base">{{ raffle.title }}</div>
+                  </button>
+                </div>
               </div>
             </el-collapse-item>
 

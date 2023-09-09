@@ -1,15 +1,58 @@
 <script setup lang="ts">
+import { addRaffle } from "~/api/raffle";
+
+const router = useRouter();
+
+async function add_raffle(
+  title: string,
+  content: string,
+  deadline: string,
+  times: string
+) {
+  const loading = ElLoading.service({
+    fullscreen: true,
+    text: "正在新建抽奖",
+  });
+  await addRaffle(title, content, deadline, times)
+    .then((data) => {
+      ElMessageBox.alert("新建抽奖成功", "新建抽奖提示", {
+        confirmButtonText: "好的",
+        showClose: false,
+        callback: () => {
+          router.push("/");
+        },
+      });
+      return data;
+    })
+    .catch((err) => {
+      ElMessageBox.alert("新建抽奖失败", "新建抽奖提示", {
+        confirmButtonText: "好的",
+        showClose: false,
+        callback: () => {},
+      });
+      return err;
+    })
+    .finally(() => {
+      loading.close();
+    });
+}
+
+function resetRaffle() {
+  form.value.content = "";
+  form.value.deadline = "";
+  form.value.limit = false;
+  form.value.times = "";
+  form.value.title = "";
+}
 const limited = ref(false);
 const unlimited = ref(false);
 
 const form = ref({
-  theme: "",
-  date1: "",
-  time1: "",
-  date2: "",
-  time2: "",
+  title: "",
+  deadline: "",
+  content: "",
   limit: false,
-  raffle_num: "",
+  times: "",
 });
 
 const onSubmit = () => {
@@ -20,7 +63,7 @@ const onSubmit = () => {
 <template>
   <div>
     <el-container>
-      <el-header>
+      <el-header class="mb-16">
         <div
           class="text-white text-2xl font-extrabold grid place-items-center mt-4"
         >
@@ -35,83 +78,72 @@ const onSubmit = () => {
         </div>
       </el-header>
 
-      <el-main>
+      <el-main class="mb-10">
         <div class="z-1">
           <el-form :model="form">
             <el-form-item>
-              <span class="mr-2"> 抽奖主题 </span>
+              <span class="mr-4 text-white font-bold text-sm">截止时间</span>
+              <el-col :span="17">
+                <client-only>
+                  <el-date-picker
+                    v-model="form.deadline"
+                    type="datetime"
+                    style="width: 94%"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                    popper-class="popperClass"
+                  />
+                </client-only>
+              </el-col>
+            </el-form-item>
+
+            <el-form-item>
+              <span class="mr-4 text-white font-bold text-sm"> 抽奖主题 </span>
               <span>
-                <el-input v-model="form.theme" class="input" />
+                <el-input v-model="form.title" class="input" />
               </span>
             </el-form-item>
 
             <el-form-item>
-              <span class="mr-2">起始时间</span>
-              <el-col :span="10">
-                <el-date-picker
-                  v-model="form.date1"
-                  type="date"
-                  style="width: 94%"
-                />
-              </el-col>
-
-              <el-col :span="1">
-                <span class="text-white font-extrabold text-xl">-</span>
-              </el-col>
-
-              <el-col :span="8">
-                <el-time-picker v-model="form.time1" style="width: 97%" />
-              </el-col>
+              <span class="mr-4 text-white font-bold text-sm"> 抽奖内容</span>
+              <span>
+                <textarea v-model="form.content" rows="5" cols="30" />
+              </span>
             </el-form-item>
 
             <el-form-item>
-              <span class="mr-2">截止时间</span>
-              <el-col :span="10">
-                <el-date-picker
-                  v-model="form.date2"
-                  type="date"
-                  style="width: 94%"
-                />
-              </el-col>
-
-              <el-col :span="1">
-                <span class="text-white font-extrabold text-xl">-</span>
-              </el-col>
-
-              <el-col :span="8">
-                <el-time-picker v-model="form.time2" style="width: 97%" />
-              </el-col>
-            </el-form-item>
-
-            <el-form-item>
-              <span class="mr-4"> 请选择奖品是否无限 </span>
-              <el-switch v-model="form.limit" />
-            </el-form-item>
-
-            <el-form-item>
-              <el-button v-if="!form.limit" @click="limited = true"
-                >点击编辑奖品</el-button
+              <span class="mr-5 text-white font-bold text-sm"
+                >每个用户可抽奖的次数</span
               >
-              <el-button v-if="form.limit">点击编辑奖品</el-button>
-            </el-form-item>
-
-            <el-form-item>
-              <span class="mr-5">每个用户可抽奖的次数</span>
-              <span
-                ><el-input v-model="form.raffle_num" class="input-2"
-              /></span>
+              <span><el-input v-model="form.times" class="input-2" /></span>
             </el-form-item>
           </el-form>
         </div>
       </el-main>
       <el-footer>
-        <div class="flex justify-between align-middle">
-          <el-button>保存</el-button>
-          <el-button>应用</el-button>
-        </div>
-
-        <div class="grid place-items-center pt-4">
-          <el-button class="z-15"> 重置 </el-button>
+        <div class="flex justify-center align-middle">
+          <el-button
+            color="rgb(188, 162, 77)"
+            class="bt"
+            @click="
+              add_raffle(form.title, form.content, form.deadline, form.times)
+            "
+          >
+            <div class="font-bold text-base">保存</div>
+          </el-button>
+          <el-button
+            color="rgb(188, 162, 77)"
+            class="bt"
+            @click="resetRaffle()"
+          >
+            <div class="font-bold text-base">重置</div>
+          </el-button>
+          <el-button
+            color="rgb(188, 162, 77)"
+            class="bt"
+            @click="router.push('/admin-center')"
+          >
+            <div class="font-bold text-base">返回</div>
+          </el-button>
         </div>
       </el-footer>
     </el-container>
@@ -120,10 +152,21 @@ const onSubmit = () => {
 
 <style scoped>
 .input {
-  width: 12rem;
+  width: 14rem;
+}
+
+.input-1 {
+  width: 14rem;
+  height: 6rem;
 }
 
 .input-2 {
   width: 3rem;
+}
+
+.bt {
+  width: 6rem;
+  height: 2.5rem;
+  color: #3c0d9c;
 }
 </style>
