@@ -139,6 +139,22 @@ async function get_raffles_by_state(state: number) {
             <el-collapse-item>
               <template #title>
                 <button @click="get_raffles_by_state(0)">
+                  <div class="text-base ml-4 w-full">未发布的抽奖</div>
+                </button>
+              </template>
+
+              <div class="raffles-ct" v-for="raffle in raffles">
+                <div class="raffles-ing-ct grid place-items-center my-2">
+                  <button>
+                    <div class="text-base">{{ raffle.title }}</div>
+                  </button>
+                </div>
+              </div>
+            </el-collapse-item>
+
+            <el-collapse-item>
+              <template #title>
+                <button @click="get_raffles_by_state(1)">
                   <div class="text-base ml-4 w-full">正在进行的抽奖</div>
                 </button>
               </template>
@@ -154,15 +170,18 @@ async function get_raffles_by_state(state: number) {
 
             <el-collapse-item>
               <template #title>
-                <div class="text-base ml-4 w-full">已结束的抽奖</div>
-              </template>
-
-              <div
-                class="raffles-ed-ct grid place-items-center border-violet-950 border-y-2"
-              >
-                <button>
-                  <div class="text-base">原神抽奖</div>
+                <button @click="get_raffles_by_state(2)">
+                  <div class="text-base ml-4 w-full">已结束的抽奖</div>
                 </button>
+              </template>
+              <div class="raffles-ct" v-for="raffle in raffles">
+                <div
+                  class="raffles-ed-ct grid place-items-center border-violet-950 border-y-2"
+                >
+                  <button>
+                    <div class="text-base">{{ raffle.title }}</div>
+                  </button>
+                </div>
               </div>
             </el-collapse-item>
 
