@@ -16,6 +16,7 @@ async function handle_times(
     .then((data) => {
       ElMessageBox.alert("修改成功", "修改信息提示", {
         confirmButtonText: "好的",
+        showClose: false,
         callback: () => {},
       });
       return data;
@@ -23,6 +24,7 @@ async function handle_times(
     .catch((err) => {
       ElMessageBox.alert("更新成失败", "更新信息提示", {
         confirmButtonText: "好的",
+        showClose: false,
         callback: () => {},
       });
     })
@@ -68,10 +70,7 @@ async function get_raffles_by_state(state: number) {
           <el-avatar :src="avatar_url" class="avatar" />
         </div>
 
-        <div class="times-ct grid place-items-center mt-16 mb-20" v-if="0">
-          <el-button @click="times_status = true">
-            点击修改用户抽奖次数
-          </el-button>
+        <div class="times-ct grid place-items-center">
           <el-dialog v-model="times_status" width="80%">
             <template #header>修改用户抽奖次数 </template>
             <div>
@@ -115,6 +114,16 @@ async function get_raffles_by_state(state: number) {
         </div>
 
         <div class="collapse-ct mt-6">
+          <div>
+            <button @click="times_status = true">
+              <div
+                class="change-ct text-black text-base bg-white flex justify-center items-center pl-4 pr-2"
+              >
+                <div>更改用户抽奖次数</div>
+              </div>
+            </button>
+          </div>
+
           <button @click="router.push('/raffle-add')">
             <div
               class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2"
@@ -234,6 +243,11 @@ async function get_raffles_by_state(state: number) {
 }
 
 .add-ct {
+  width: 19.4rem;
+  height: 3rem;
+}
+
+.change-ct {
   width: 19.4rem;
   height: 3rem;
 }
