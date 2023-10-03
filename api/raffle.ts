@@ -1,4 +1,4 @@
-//得到抽奖信息
+
 
 interface Prize {
     id: number;
@@ -8,6 +8,16 @@ interface Prize {
     index: number;
 }
 
+interface RaffleUser {
+    id: string;
+    title: string;
+    content: string;
+    deadline: string;
+}
+
+interface RafflesInfo {
+    raffle: RaffleUser;
+}
 
 interface RaffleInfo {
     id: string;
@@ -26,7 +36,7 @@ interface Raffle {
     datetime: string;
     deadline: string;
     prize: Prize[];
-    times: number;
+    time: number;
 }
 
 
@@ -40,6 +50,8 @@ export interface Raffles {
     times: number;
 }
 
+
+//得到抽奖信息
 export async function get_raffle(raffle_id: string) {
     return await $fetch('/frontpage/index',
         {
@@ -201,6 +213,21 @@ export async function getRaffleById(raffle_id: string) {
         .then(
             (data) => {
                 return data;
+            }
+        )
+}
+
+//用户获取可抽的抽奖
+
+export async function getRafflesUser() {
+    return await $fetch(
+        '/frontpage/raffle', {
+        method: 'GET',
+    }
+    )
+        .then(
+            (data) => {
+                return (data as any) as RafflesInfo[]
             }
         )
 }

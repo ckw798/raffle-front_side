@@ -107,7 +107,7 @@ const buttons = ref([
 const result = ref({
   name: "谢谢惠顾",
   level: "安慰奖",
-  times: raffleInfo.value.times,
+  times: raffleInfo.value.time,
 });
 const msg = () => {
   ElMessageBox.alert(
@@ -127,6 +127,7 @@ const msg = () => {
     {
       // if you want to disable its autofocus
       // autofocus: false,
+      showClose: false,
       confirmButtonText: "OK",
       dangerouslyUseHTMLString: true,
       callback: () => {},
@@ -140,10 +141,11 @@ const startCallback = async (raffle_id) => {
       // if you want to disable its autofocus
       // autofocus: false,
       confirmButtonText: "OK",
+      showClose: false,
       callback: async () => {
         await get_raffle(raffle_id)
           .then((data) => {
-            result.value.times = data.times;
+            result.value.times = data.time;
             return data;
           })
           .catch((err) => {
@@ -151,6 +153,7 @@ const startCallback = async (raffle_id) => {
               // if you want to disable its autofocus
               // autofocus: false,
               confirmButtonText: "OK",
+              showClose: false,
               callback: () => {},
             });
           });
@@ -187,13 +190,14 @@ const endCallback = () => {
 async function handleClose() {
   await get_raffle(raffle_id)
     .then((data) => {
-      result.value.times = data.times;
+      result.value.times = data.time;
       return data;
     })
     .catch((err) => {
       ElMessageBox.alert("抽奖次数刷新失败", "抽奖提示", {
         // if you want to disable its autofocus
         // autofocus: false,
+        showClose: false,
         confirmButtonText: "OK",
         callback: () => {},
       });

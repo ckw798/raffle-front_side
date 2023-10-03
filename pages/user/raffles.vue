@@ -1,19 +1,11 @@
 <script setup lang="ts">
-import { get_record } from "~/api/record";
-import { ElMessage } from "element-plus";
+import { getRafflesUser } from "~/api/raffle";
 
 const raffle_s = ref("进 入");
 
 const router = useRouter();
 
-const raffles = ref([
-  {
-    title: "新抽奖",
-    content: "1235",
-    datetime: "2022-3-2",
-    id: "1",
-  },
-]);
+const raffles = ref(await getRafflesUser());
 
 async function initRecord() {
   const loading = ElLoading.service({
@@ -40,7 +32,7 @@ async function initRecord() {
           <el-timeline v-for="raffle in raffles">
             <el-timeline-item
               center
-              :timestamp="raffle.datetime"
+              :timestamp="raffle.raffle.deadline"
               placement="top"
               color="rgb(249,216,109
 )"
@@ -51,23 +43,19 @@ async function initRecord() {
                 <div
                   class="r-title grid place-items-center font-bold text-xl pb-5"
                 >
-                  {{ raffle.title }}
+                  {{ raffle.raffle.title }}
                 </div>
                 <div
                   class="r-main grid place-items-center font-medium text-base"
                 >
-                  {{ raffle.content }}
+                  {{ raffle.raffle.content }}
                 </div>
-                <div
-                  class="r-times grid place-items-center font-medium text-large pt-3"
-                >
-                  剩余抽奖次数: {{ raffle.content }}
-                </div>
+
                 <div class="button-ct grid place-items-center pt-5">
                   <el-button
                     color="#5d22d0"
                     round
-                    @click="router.push('/user/raffle/' + raffle.id)"
+                    @click="router.push('/user/raffle/' + raffle.raffle.id)"
                   >
                     <div
                       class="r-text grid place-items-center font-semibold text-lg"
