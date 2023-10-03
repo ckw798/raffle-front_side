@@ -78,7 +78,7 @@ function msg() {
             class="bt"
             color="rgb(249,216,109)"
             dark
-            @click="router.push('/')"
+            @click="router.push('/user/raffles')"
             ><div class="bt-text text-base font-medium">
               正在抽奖
             </div></el-button
@@ -96,7 +96,7 @@ function msg() {
             class="bt"
             color="rgb(249,216,109)"
             dark
-            @click="router.push('/user-center')"
+            @click="router.push('/user/center')"
             ><div class="bt-text text-base font-medium">
               个人中心
             </div></el-button

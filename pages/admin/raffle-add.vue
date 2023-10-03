@@ -22,6 +22,7 @@ async function add_raffle(
           router.push("/");
         },
       });
+      raffle_id;
       return data;
     })
     .catch((err) => {
@@ -55,6 +56,8 @@ const form = ref({
   times: "",
 });
 
+const raffle_id = ref(1);
+
 const onSubmit = () => {
   console.log("submit!");
 };
@@ -63,7 +66,7 @@ const onSubmit = () => {
 <template>
   <div>
     <el-container>
-      <el-header class="mb-16">
+      <el-header class="mb-8">
         <div
           class="text-white text-2xl font-extrabold grid place-items-center mt-4"
         >
@@ -78,7 +81,7 @@ const onSubmit = () => {
         </div>
       </el-header>
 
-      <el-main class="mb-10">
+      <el-main class="mb-14">
         <div class="z-1">
           <el-form :model="form">
             <el-form-item>
@@ -106,7 +109,12 @@ const onSubmit = () => {
             <el-form-item>
               <span class="mr-4 text-white font-bold text-sm"> 抽奖内容</span>
               <span>
-                <textarea v-model="form.content" rows="5" cols="30" />
+                <textarea
+                  v-model="form.content"
+                  rows="5"
+                  cols="30"
+                  class="content"
+                />
               </span>
             </el-form-item>
 
@@ -140,7 +148,7 @@ const onSubmit = () => {
           <el-button
             color="rgb(188, 162, 77)"
             class="bt"
-            @click="router.push('/admin-center')"
+            @click="router.push('/admin/center')"
           >
             <div class="font-bold text-base">返回</div>
           </el-button>
@@ -168,5 +176,9 @@ const onSubmit = () => {
   width: 6rem;
   height: 2.5rem;
   color: #3c0d9c;
+}
+
+.content {
+  background-color: rgb(142, 84, 255);
 }
 </style>

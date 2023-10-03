@@ -124,7 +124,7 @@ async function get_raffles_by_state(state: number) {
             </button>
           </div>
 
-          <button @click="router.push('/raffle-add')">
+          <button @click="router.push('/admin/raffle-add')">
             <div
               class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2"
             >
@@ -239,7 +239,7 @@ async function get_raffles_by_state(state: number) {
                 [
                   adminStore.logout,
                   (log_out_status = false),
-                  router.push('/admin-login'),
+                  router.push('/admin/login'),
                 ]
               "
               class="el-bt"

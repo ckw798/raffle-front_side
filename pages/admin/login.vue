@@ -45,7 +45,7 @@ async function handleLogin() {
         return data;
       })
       .then((data) => {
-        router.push("/admin-center");
+        router.push("/admin/center");
         return data;
       })
       .finally(() => {

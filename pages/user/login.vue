@@ -38,13 +38,14 @@ async function handleLogin() {
       .then((data) => {
         ElMessageBox.alert("登录成功", "登录提示", {
           confirmButtonText: "好的",
+          showClose: false,
           callback: () => {},
         });
 
         return data;
       })
       .then((data) => {
-        router.push("/user-center");
+        router.push("/user/center");
         return data;
       })
       .finally(() => {
@@ -54,6 +55,7 @@ async function handleLogin() {
     console.log(err);
     ElMessageBox.alert("登录失败，请检查网络条件或账号密码后重试", "登录提示", {
       confirmButtonText: "好的",
+      showClose: false,
       callback: () => {},
     });
     return err;

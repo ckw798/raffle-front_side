@@ -8,6 +8,17 @@ interface Prize {
     index: number;
 }
 
+
+interface RaffleInfo {
+    id: string;
+    title: string;
+    datetime: string;
+    deadline: string;
+    state: number;
+    content: string;
+    times: number;
+}
+
 interface Raffle {
     id: string;
     title: string;
@@ -97,7 +108,7 @@ export async function addRaffle(title: string, content: string, deadline: string
                 times
             }
         })
-        .then((data) => { return data; })
+        .then((data) => { return (data as any) as RaffleInfo; })
 
 }
 

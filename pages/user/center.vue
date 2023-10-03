@@ -28,6 +28,7 @@ async function initForm() {
       loading.close();
       ElMessageBox.alert("个人信息初始化失败", "信息初始化提示", {
         confirmButtonText: "好的",
+        showClose: false,
         callback: () => {},
       });
       console.log(err);
@@ -59,6 +60,7 @@ async function handleChange() {
     .then((data) => {
       ElMessageBox.alert("更新成功", "更新信息提示", {
         confirmButtonText: "好的",
+        showClose: false,
         callback: () => {},
       });
       return data;
@@ -66,6 +68,7 @@ async function handleChange() {
     .catch((err) => {
       ElMessageBox.alert("更新失败", "更新信息提示", {
         confirmButtonText: "好的",
+        showClose: false,
         callback: () => {},
       });
       console.log(err);
@@ -127,7 +130,7 @@ initForm();
           class="bt"
           color="rgb(249,216,109)"
           dark
-          @click="router.push('/')"
+          @click="router.push('/user/raffles')"
           ><div class="bt-text text-base font-medium" style="color: #5d22d0">
             正在抽奖
           </div></el-button
@@ -138,7 +141,7 @@ initForm();
           class="bt"
           color="rgb(249,216,109)"
           dark
-          @click="router.push('/history')"
+          @click="router.push('/user/history')"
           ><div class="bt-text text-base font-medium" style="color: #5d22d0">
             中奖历史
           </div></el-button
@@ -149,7 +152,7 @@ initForm();
           class="bt"
           color="rgb(249,216,109)"
           dark
-          @click="router.push('/user-center')"
+          @click="router.push('/user/center')"
           ><div class="bt-text text-base font-medium" style="color: #5d22d0">
             个人中心
           </div></el-button
