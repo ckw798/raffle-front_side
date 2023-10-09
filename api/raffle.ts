@@ -142,14 +142,17 @@ export async function getRafflesByState(state: number) {
 
 
 //修改抽奖信息
-export async function updateRaffle(raffle_id: string, raffle_title: string, raffle_content: string, raffle_deadline: string) {
-    return await $fetch('background/update_raffle', {
+export async function updateRaffle(raffle_id: string, title: string, content: string, deadline: string, times: number) {
+    return await $fetch('background/raffle', {
         method: 'PUT',
         params: {
-            raffle_id,
-            raffle_title,
-            raffle_content,
-            raffle_deadline
+            raffle_id
+        },
+        body: {
+            title,
+            content,
+            deadline,
+            times
         }
     })
         .then(
@@ -162,7 +165,7 @@ export async function updateRaffle(raffle_id: string, raffle_title: string, raff
 
 // 更改抽奖状态
 
-export async function updateState(state: number, raffle: number) {
+export async function updateState(state: number, raffle: string) {
     return await $fetch(
         '/background/state', {
         method: 'PUT',
@@ -212,7 +215,7 @@ export async function getRaffleById(raffle_id: string) {
     )
         .then(
             (data) => {
-                return data;
+                return (data as any) as RaffleInfo;
             }
         )
 }

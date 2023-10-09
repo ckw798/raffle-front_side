@@ -19,7 +19,7 @@ async function add_raffle(
         confirmButtonText: "好的",
         showClose: false,
         callback: () => {
-          router.push("/");
+          router.push("/admin/raffle/" + data.id);
         },
       });
       raffle_id;
@@ -57,10 +57,6 @@ const form = ref({
 });
 
 const raffle_id = ref(1);
-
-const onSubmit = () => {
-  console.log("submit!");
-};
 </script>
 
 <template>

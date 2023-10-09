@@ -7,36 +7,9 @@ import { handleTimes } from "~/api/raffle";
 const userStore = useUserStore();
 userStore.logout();
 
-async function handle_times(
-  raffle_id: string,
-  student_number: string,
-  remaining_times: number
-) {
-  await handleTimes(raffle_id, student_number, remaining_times)
-    .then((data) => {
-      ElMessageBox.alert("修改成功", "修改信息提示", {
-        confirmButtonText: "好的",
-        showClose: false,
-        callback: () => {},
-      });
-      return data;
-    })
-    .catch((err) => {
-      ElMessageBox.alert("更新成失败", "更新信息提示", {
-        confirmButtonText: "好的",
-        showClose: false,
-        callback: () => {},
-      });
-    })
-    .finally(() => {
-      form.value = { raffle_id: "", student_number: "", remaining_times: 0 };
-    });
-}
-const form = ref({ raffle_id: "", student_number: "", remaining_times: 0 });
 const router = useRouter();
 const adminStore = useAdminStore();
 const log_out_status = ref(false);
-const times_status = ref(false);
 const raffles = ref<Raffles[]>([]);
 
 async function get_raffles_by_state(state: number) {
@@ -70,60 +43,7 @@ async function get_raffles_by_state(state: number) {
           <el-avatar :src="avatar_url" class="avatar" />
         </div>
 
-        <div class="times-ct grid place-items-center">
-          <el-dialog v-model="times_status" width="80%">
-            <template #header>修改用户抽奖次数 </template>
-            <div>
-              <el-form v-model="form">
-                <el-form-item>
-                  <span class="mr-8">抽奖id</span>
-                  <span><el-input v-model="form.raffle_id"></el-input></span>
-                </el-form-item>
-
-                <el-form-item>
-                  <span class="mr-11">学号</span>
-                  <span
-                    ><el-input v-model="form.student_number"></el-input
-                  ></span>
-                </el-form-item>
-
-                <el-form-item>
-                  <span class="mr-4">抽奖次数</span>
-                  <span
-                    ><el-input v-model="form.remaining_times"></el-input
-                  ></span>
-                </el-form-item>
-              </el-form>
-            </div>
-            <template #footer>
-              <el-button
-                @click="
-                  [
-                    (times_status = false),
-                    handle_times(
-                      form.raffle_id,
-                      form.student_number,
-                      form.remaining_times
-                    ),
-                  ]
-                "
-                >确定</el-button
-              >
-            </template>
-          </el-dialog>
-        </div>
-
         <div class="collapse-ct mt-6">
-          <div>
-            <button @click="times_status = true">
-              <div
-                class="change-ct text-black text-base bg-white flex justify-center items-center pl-4 pr-2"
-              >
-                <div>更改用户抽奖次数</div>
-              </div>
-            </button>
-          </div>
-
           <button @click="router.push('/admin/raffle-add')">
             <div
               class="add-ct text-black text-base bg-white flex justify-between items-center pl-4 pr-2"
@@ -145,7 +65,7 @@ async function get_raffles_by_state(state: number) {
 
               <div class="raffles-ct" v-for="raffle in raffles">
                 <div class="raffles-ing-ct grid place-items-center my-2">
-                  <button>
+                  <button @click="router.push('/admin/raffle/' + raffle.id)">
                     <div class="text-base">{{ raffle.title }}</div>
                   </button>
                 </div>
@@ -161,7 +81,7 @@ async function get_raffles_by_state(state: number) {
 
               <div class="raffles-ct" v-for="raffle in raffles">
                 <div class="raffles-ing-ct grid place-items-center my-2">
-                  <button>
+                  <button @click="router.push('/admin/raffle/' + raffle.id)">
                     <div class="text-base">{{ raffle.title }}</div>
                   </button>
                 </div>
@@ -178,7 +98,7 @@ async function get_raffles_by_state(state: number) {
                 <div
                   class="raffles-ed-ct grid place-items-center border-violet-950 border-y-2"
                 >
-                  <button>
+                  <button @click="router.push('/admin/raffle/' + raffle.id)">
                     <div class="text-base">{{ raffle.title }}</div>
                   </button>
                 </div>
