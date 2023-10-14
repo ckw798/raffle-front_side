@@ -1,18 +1,31 @@
 //封装了奖品相关的api
 
+//
+
+export interface Prize {
+    id: number;
+    image: string;
+    amount_probability: boolean;
+    raffle_id: string;
+    level: string;
+    name: string;
+    amount: number;
+}
+
+
 // 新增奖品
-export async function addPrize(name: string, level: string, image: string, amount: number, number_probability: number, raffle_id: string) {
+export async function addPrize(name: string, level: string, file: any, amount: number, number_probability: boolean, raffle_id: string) {
     return await $fetch(
         '/background/prize',
         {
             method: 'POST',
+            params: { raffle_id },
             body: {
+                file,
                 name,
                 level,
-                image,
                 amount,
                 number_probability,
-                raffle_id
             }
         }
     )
@@ -26,18 +39,20 @@ export async function addPrize(name: string, level: string, image: string, amoun
 
 // 修改奖品
 
-export async function updatePrize(prize_id: number, prize_name: string, prize_level: string, prize_amount: number, prize_amount_probability: number
+export async function updatePrize(prize_id: number, name: string, level: string, amount: number, amount_probability: boolean
 ) {
-    await $fetch(
-        '/background/alter_by_prize',
+    return await $fetch(
+        '/background/prize',
         {
             method: 'PUT',
             params: {
-                prize_id,
-                prize_name,
-                prize_level,
-                prize_amount,
-                prize_amount_probability
+                prize_id
+            },
+            body: {
+                name,
+                level,
+                amount,
+                amount_probability
             }
         }
     )
@@ -48,3 +63,22 @@ export async function updatePrize(prize_id: number, prize_name: string, prize_le
         )
 }
 
+//按抽奖id获取奖品信息
+
+export async function getPrizes(raffle_id: string) {
+    return await $fetch(
+        '/background/prize',
+        {
+            method: 'GET',
+            params: {
+                raffle_id
+            }
+
+        }
+    )
+        .then(
+            (data) => {
+                return (data as any) as Prize[];
+            }
+        )
+}

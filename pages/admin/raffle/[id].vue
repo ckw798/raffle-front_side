@@ -213,8 +213,21 @@ const options = [
 
             <el-form-item>
               <div class="text-center">
-                <el-button @click="times_status = true"
+                <el-button
+                  @click="times_status = true"
+                  color="rgb(188, 162, 77)"
+                  class="el-bt"
+                  font-bold
+                  text-base
                   >修改某个用户抽奖次数</el-button
+                >
+                <el-button
+                  color="rgb(188, 162, 77)"
+                  font-bold
+                  text-base
+                  class="el-bt"
+                  @click="router.push('/admin/prizes/' + raffle_id)"
+                  >编辑奖品信息</el-button
                 >
               </div>
             </el-form-item>

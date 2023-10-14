@@ -19,7 +19,7 @@ async function add_raffle(
         confirmButtonText: "好的",
         showClose: false,
         callback: () => {
-          router.push("/admin/raffle/" + data.id);
+          router.push("/admin/prizes/" + data.id);
         },
       });
       raffle_id;
