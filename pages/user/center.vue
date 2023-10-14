@@ -253,7 +253,7 @@ initForm();
               @click="
                 [
                   userStore.logout,
-                  router.push('/user-login'),
+                  router.push('/user/login'),
                   (log_out_status = false),
                 ]
               "
